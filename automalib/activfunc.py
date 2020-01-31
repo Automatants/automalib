@@ -33,7 +33,7 @@ sigmoid = ActivationFunction(
 # --- leaky relu ---
 def leaky_relu (slope):
     """
-        Returns a leaky realy with a custom slope.
+    Returns a leaky relu with a custom slope.
     """
     
     return ActivationFunction(
