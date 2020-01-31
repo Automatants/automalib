@@ -1,0 +1,4 @@
+test.*
+.vscode/
+automavenv/
+__pycache__/
