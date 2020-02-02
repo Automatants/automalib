@@ -1,4 +1,5 @@
 import numpy as np
+from automalib.utils import batch_wrapper_object
 
 class NeuralNetwork ():
     """
@@ -13,14 +14,11 @@ class NeuralNetwork ():
         self.biases     = entry[:,1]
         self.funcs      = entry[:,2]
     
-    def __call__ (self, batch):        
-        layer_output = np.array(batch)
-        if len(layer_output.shape) == 1: return self(np.array([layer_output]))[0]
-        
+    @batch_wrapper_object()
+    def __call__ (self, batch):
+        out = batch
         for i in range(len(self.weights)):
-            # self.weights[i].dot(layer_output.T).T
-            # With help from http://ajcr.net/Basic-guide-to-einsum/
-            tmp = np.einsum('ij,kj->ki', self.weights[i], layer_output)
-            layer_output = self.funcs[i](tmp + self.biases[i])
+            tmp = self.weights[i].dot(out.T).T
+            out = self.funcs[i](tmp + self.biases[i])
         
-        return layer_output
+        return out

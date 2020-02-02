@@ -1,20 +1,23 @@
 import numpy as np
+from automalib.utils import batch_wrapper
 
 # --- Activation function class ---
 class ActivationFunction ():
     """
     Class that represents an activation function. Base function is
-    mandatory but you can miss the derivative.
+    mandatory but you can miss the derivative. Here, the function
+    is derived along the vector. Both functions must handle
+    2D arg (list of vectors).
     """
     
     def __derivative_not_implemented (self, *args, **kwargs):
         raise NotImplementedError("Derivative is not implemented.")
     
     def __init__ (self, function, derivative = None):
-        self.f = function
-        self.deriv = derivative or self.__derivative_not_implemented
+        self.__f = batch_wrapper(function)
+        self.derivative = batch_wrapper(derivative) if derivative else self.__derivative_not_implemented
     
-    def __call__ (self, *args, **kwargs): return self.f(*args, **kwargs)
+    def __call__ (self, x): return self.__f(x)
 
 # --- identity ---
 identity = ActivationFunction(
