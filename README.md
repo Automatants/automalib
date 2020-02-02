@@ -1,5 +1,8 @@
 # Automalib
 
-[Contributing](./CONTRIBUTING.md)
+**Automalib** is a python library created to help the build of basic (and complex) AIs.
 
-> Under construction.
+### [Contributing](./CONTRIBUTING.md)
+
+### Changelog:
+> TODO (Version numbering / Changes)
