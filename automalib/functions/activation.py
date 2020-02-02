@@ -4,17 +4,22 @@ import numpy as np
 class ActivationFunction ():
     """
     Class that represents an activation function. Base function is
-    mandatory but you can miss the derivative.
+    mandatory but you can miss the derivative. Here, the function
+    is derived along the vector. Both functions must handle
+    2D arg (list of vectors).
     """
     
     def __derivative_not_implemented (self, *args, **kwargs):
         raise NotImplementedError("Derivative is not implemented.")
     
     def __init__ (self, function, derivative = None):
-        self.f = function
-        self.deriv = derivative or self.__derivative_not_implemented
+        self.__f = function
+        self.derivative = derivative or self.__derivative_not_implemented
     
-    def __call__ (self, *args, **kwargs): return self.f(*args, **kwargs)
+    def __call__ (self, x):
+        ev = np.array(x)
+        if len(ev.shape) == 1: return self.__f(np.array([ev]))[0]
+        else: return self.__f(ev)
 
 # --- identity ---
 identity = ActivationFunction(

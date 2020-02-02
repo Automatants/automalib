@@ -13,14 +13,17 @@ class NeuralNetwork ():
         self.biases     = entry[:,1]
         self.funcs      = entry[:,2]
     
-    def __call__ (self, batch):        
-        layer_output = np.array(batch)
-        if len(layer_output.shape) == 1: return self(np.array([layer_output]))[0]
-        
+    def __f (self, batch):
+        out = batch.copy()
         for i in range(len(self.weights)):
-            # self.weights[i].dot(layer_output.T).T
+            # self.weights[i].dot(out.T).T
             # With help from http://ajcr.net/Basic-guide-to-einsum/
-            tmp = np.einsum('ij,kj->ki', self.weights[i], layer_output)
-            layer_output = self.funcs[i](tmp + self.biases[i])
+            tmp = np.einsum('ij,kj->ki', self.weights[i], out)
+            out = self.funcs[i](tmp + self.biases[i])
         
-        return layer_output
+        return out
+    
+    def __call__ (self, batch):
+        input = np.array(batch)
+        if len(input.shape) == 1: return self.__f(np.array([input]))[0]
+        else: return self.__f(input)
