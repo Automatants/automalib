@@ -1,4 +1,5 @@
 import numpy as np
+from automalib.utils import batch_wrapper
 
 # --- Non-zero constant ---
 EPSILON = 10**-10
@@ -16,14 +17,10 @@ class CostFunction ():
         raise NotImplementedError("Derivative is not implemented.")
     
     def __init__ (self, function, derivative = None):
-        self.__f = function
-        self.derivative = derivative or self.__derivative_not_implemented
+        self.__f = batch_wrapper(function)
+        self.derivative = batch_wrapper(derivative) if derivative else self.__derivative_not_implemented
     
-    def __call__ (self, h, y):
-        h_ev = np.array(h)
-        y_ev = np.array(y)
-        if len(h_ev.shape) == 1: return self.__f(np.array([h_ev]), np.array([y_ev]))[0]
-        else: return self.__f(h_ev, y_ev)
+    def __call__ (self, h, y): return self.__f(h, y)
 
 # --- norms ---
 def L (pow):

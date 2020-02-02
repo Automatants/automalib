@@ -1,4 +1,5 @@
 import numpy as np
+from automalib.utils import batch_wrapper
 
 # --- Activation function class ---
 class ActivationFunction ():
@@ -13,13 +14,10 @@ class ActivationFunction ():
         raise NotImplementedError("Derivative is not implemented.")
     
     def __init__ (self, function, derivative = None):
-        self.__f = function
-        self.derivative = derivative or self.__derivative_not_implemented
+        self.__f = batch_wrapper(function)
+        self.derivative = batch_wrapper(derivative) if derivative else self.__derivative_not_implemented
     
-    def __call__ (self, x):
-        ev = np.array(x)
-        if len(ev.shape) == 1: return self.__f(np.array([ev]))[0]
-        else: return self.__f(ev)
+    def __call__ (self, x): return self.__f(x)
 
 # --- identity ---
 identity = ActivationFunction(
